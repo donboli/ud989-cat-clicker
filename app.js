@@ -1,36 +1,98 @@
+$(function() {
 
-var cats = $(".cat");
-var buttons = $("button");
+	var model = {
+		init: function() {
+			this.cats = {};
 
-function hideAllCats(){
-	for (var i=0; i<cats.length; i++){
-		$(cats[i]).hide();
-	}
-}
+			for (var i = 1; i < 6; i++) {
+				this.cats['cat' + i] = {
+					src: 'cat_picture' + i + '.jpg',
+					counter: 0
+				};
+			}
+		},
 
-function bindButtonToCat(idNumber){
-	$("#button"+idNumber).click(function(){
-		hideAllCats();
-		$("#cat"+idNumber).show();
-	})
-}
+		getAll: function() {
+			return this.cats;
+		},
 
-function bindCounterToCat(idNumber){
-	var cat = "#cat"+idNumber
-	$(cat).click(function(){
-		var count = $(cat+" > .counter").text();
-		count = parseInt(count) + 1;
-		$(cat+" > .counter").text(count);
-	})
-}
+		get: function(id) {
+			return this.cats[id];
+		},
 
-for (var i=1; i<=buttons.length; i++){
-	bindButtonToCat(i);
-}
+		incrementCounter(id) {
+			this.cats[id].counter++;
+		}
+	};
 
-for (var i=1; i<=cats.length; i++){
-	bindCounterToCat(i);
-}
+	var octopus = {
+		init: function() {
+			model.init();
+			listView.init();
+			listView.render();
+			catView.init();
+		},
 
-hideAllCats();
-$("#cat1").show();
+		getCats: function() {
+			return model.getAll();
+		},
+
+		getCat: function(id) {
+			return model.get(id);
+		},
+
+		incrementCounter: function(id) {
+			model.incrementCounter(id);
+		}
+	};
+
+	var listView = {
+		init: function() {
+			this.buttons = [];
+			this.$catList = $('#catList');
+		},
+
+		render: function() {
+			var cats =  octopus.getCats();
+
+			// set button list
+			for (var cat in cats) {
+				if (cats.hasOwnProperty(cat)) {
+					this.buttons.push("<button data-id='" + cat + "'>" + cat + "</button>");
+				}
+			}
+
+			this.$catList.append(this.buttons.join(''));
+
+			// add event listener for cat buttons
+			this.$catList.on('click', 'button', function() {
+				catView.render($(this).data('id'));
+			});
+		}
+	};
+
+	var catView = {
+		init: function() {
+			this.$catView = $('#catView');
+
+			// add event listener for cat images
+			this.$catView.on('click', 'img', function() {
+				var id = $(this).parent('.cat').data('id');
+				octopus.incrementCounter(id);
+				catView.render(id);
+			});
+		},
+
+		render: function(id) {
+			cat = octopus.getCat(id);
+
+			this.$catView.empty();
+			this.$catView.append("<div class='cat' data-id='" + id +
+				"'><span class='counter'>" + cat.counter +
+				"</span> clicks<br><img class='clicker' src='" + cat.src +
+				"'></div>");
+		}
+	};
+
+	octopus.init();
+});
