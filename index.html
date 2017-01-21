@@ -6,7 +6,23 @@
 </head>
 <body>
 	<div id="catList"></div>
-	<div class="cat" id="catView"></div>
+  <div id="catView"></div>
+  <div id="adminView">
+    <button id="adminButton">Admin</button>
+    <form id="adminForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name">
+      <br>
+      <label for="imgURL">imgURL:</label>
+      <input type="text" id="imgURL">
+      <br>
+      <label for="clicks">Clicks:</label>
+      <input type="text" id="clicks">
+      <br>
+      <button id="cancelButton" type="reset">Cancel</button>
+      <button id="saveButton" type="submit">Save</button>
+    </form>
+  </div>
 </body>
 </html>
 <script src="jquery.js"></script>
