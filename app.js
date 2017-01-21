@@ -125,22 +125,23 @@ $(function() {
 	var catView = {
 		init: function() {
 			this.$catView = $('#catView');
+			this.$catClicks = $('#catClicks');
+			this.$catImg = $('#catImg');
 
 			// add event listener for cat images
 			this.$catView.on('click', 'img', function() {
-				var id = $(this).parent('.cat').data('id');
 				octopus.incrementClicks();
 			});
+
+			this.$catView.hide();
 		},
 
-		render: function(id) {
+		render: function() {
 			cat = octopus.getCurrentCat();
 
-			this.$catView.empty();
-			this.$catView.append("<div class='cat' data-id='" + id +
-				"'><span class='clicks'>" + cat.clicks +
-				"</span> clicks<br><img class='clicker' src='" + cat.imgURL +
-				"'></div>");
+			this.$catClicks.text(cat.clicks);
+			this.$catImg.attr('src', cat.imgURL);
+			this.$catView.show();
 		}
 	};
 
